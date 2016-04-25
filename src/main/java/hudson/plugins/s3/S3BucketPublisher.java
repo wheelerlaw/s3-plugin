@@ -121,12 +121,10 @@ public final class S3BucketPublisher extends Recorder implements SimpleBuildStep
     public void perform(@Nonnull Run<?, ?> run, @Nonnull FilePath ws, @Nonnull Launcher launcher, @Nonnull TaskListener listener)
             throws InterruptedException {
 
-        if (run.getResult() == null) {
-            log(listener.getLogger(), "Build was not finished correctly. Is not compeleted yet: " + run.isBuilding());
-            run.setResult(Result.UNSTABLE);
-            return;
+        if (run.isBuilding()) {
+            log(listener.getLogger(), "Build is still running");
         }
-        
+
         final S3Profile profile = getProfile();
 
         if (profile == null) {
@@ -144,7 +142,7 @@ public final class S3BucketPublisher extends Recorder implements SimpleBuildStep
 
             for (Entry entry : entries) {
 
-                if (entry.noUploadOnFailure && run.getResult().equals(Result.FAILURE)) {
+                if (entry.noUploadOnFailure && Result.FAILURE.equals(run.getResult())) {
                     // build failed. don't post
                     log(listener.getLogger(), "Skipping publishing on S3 because build failed");
                     continue;
