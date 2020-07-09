@@ -50,6 +50,11 @@ public final class Entry implements Describable<Entry> {
     public boolean noUploadOnFailure;
 
     /**
+     * Do not publish the artifacts when build is aborted
+     */
+    public boolean noUploadOnAborted;
+
+    /**
      * Upload either from the slave or the master
      */
     public boolean uploadFromSlave;
@@ -92,7 +97,7 @@ public final class Entry implements Describable<Entry> {
 
     @DataBoundConstructor
     public Entry(String bucket, String sourceFile, String excludedFile, String storageClass, String selectedRegion,
-                 boolean noUploadOnFailure, boolean uploadFromSlave, boolean managedArtifacts,
+                 boolean noUploadOnFailure, boolean noUploadOnAborted, boolean uploadFromSlave, boolean managedArtifacts,
                  boolean useServerSideEncryption, boolean flatten, boolean gzipFiles, boolean keepForever,
                  boolean showDirectlyInBrowser, List<MetadataPair> userMetadata) {
         this.bucket = bucket;
@@ -101,6 +106,7 @@ public final class Entry implements Describable<Entry> {
         this.storageClass = storageClass;
         this.selectedRegion = selectedRegion;
         this.noUploadOnFailure = noUploadOnFailure;
+        this.noUploadOnAborted = noUploadOnAborted;
         this.uploadFromSlave = uploadFromSlave;
         this.managedArtifacts = managedArtifacts;
         this.useServerSideEncryption = useServerSideEncryption;
