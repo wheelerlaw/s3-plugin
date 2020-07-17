@@ -1,0 +1,13 @@
+node('maven') {
+    stage('Test') {
+        sh "git config --global http.sslVerify 'false'"
+        checkout scm
+        sh "mvn versions:set -DnewVersion=0.11.3-SNAPSHOT.${env.BUILD_NUMBER} -B"
+        sh "mvn clean install -B"
+    }
+
+    stage('Archive') {
+        junit 'target/surefire-reports/**/*.xml'
+        archiveArtifacts artifacts: 'target/**/*.hpi', fingerprint: true
+    }
+}
