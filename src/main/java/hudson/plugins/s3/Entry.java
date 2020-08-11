@@ -52,7 +52,7 @@ public final class Entry implements Describable<Entry> {
     /**
      * Do not publish the artifacts when build is aborted
      */
-    public boolean noUploadOnAborted;
+    public Boolean noUploadOnAborted;
 
     /**
      * Upload either from the slave or the master
@@ -94,6 +94,14 @@ public final class Entry implements Describable<Entry> {
     * Metadata overrides
     */
     public List<MetadataPair> userMetadata;
+
+    protected Object readResolve() {
+        // We need to set noUploadOnAborted to true for backwards compatibility.
+        if (noUploadOnAborted == null) {
+             noUploadOnAborted = true;
+        }
+        return this;
+    }
 
     @DataBoundConstructor
     public Entry(String bucket, String sourceFile, String excludedFile, String storageClass, String selectedRegion,
